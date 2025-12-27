@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+  
+  
+  <style>
+    
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes coinBounce {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        .click-animation {
+            animation: pulse 0.1s ease-in-out;
+        }
+        .coin-float {
+            position: absolute;
+            animation: coinBounce 1s forwards;
+        }
+       
+          
+    #task1-progress {
+  max-width: 100%;
+}
+
+          
+          .progress-bar {
+  
+ 
+
+ 
+  border-radius: 5px;
+  overflow: hiddn;
+           
+  height: 100%;
+ 
+  
+ 
+          
+          
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+
+</head>
+<body class="bg-gray-900 text-white font-['Inter'] min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <i class="fas fa-coins text-yellow-400 text-3xl mr-3"></i>
+                <h1 class="text-2xl font-bold">Pizza Coin</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-gray-800 px-4 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-coins text-yellow-400 mr-2"></i>
+                    <span id="coin-counter" class="font-bold">0</span>
+                </div>
+                <button id="settings-btn" class="bg-gray-700 p-2 rounded-lg hover:bg-gray-600 transition">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column - Clicker -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Auto Mining</h2>
+                    <div class="text-sm text-gray-400">
+                        <span id="cps-counter">0</span> PEZ/sc
+                    </div>
+                </div>
+
+                <!-- Clicker Area -->
+                <div class="relative flex justify-center items-center">
+                    <div id="click-area" class="bg-gray-700 rounded-full w-64 h-64 flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-all duration-200 shadow-xl border-4 border-yellow-500">
+                        <div class="text-center">click
+                            <i class="fas fa-coins text-yellow-400 text-6xl mb-2"></i>
+                            
+                          <p class="text-sm text-yellow-300" id="click-value">click to</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-gray-400 text-sm">clicker</div>
+                        <div class="text-xl font-bold" id="total-clicks">0</div>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-gray-400 text-sm">auto mining</div>
+                        <div class="text-xl font-bold" id="auto-miners">0</div>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-gray-400 text-sm">multiple</div>
+                        <div class="text-xl font-bold" id="multiplier">1x</div>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-gray-400 text-sm">you earn</div>
+                        <div class="text-xl font-bold" id="total-earned">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Features -->
+            <div class="space-y-6">
+                <!-- AI Tip -->
+                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-robot text-blue-400 mr-2"></i>
+                        <h3 class="font-semibold">tips</h3>
+                    </div>
+                    <div id="ai-tip" class="text-sm text-gray-300 italic">
+                        "Compound your earnings by reinvesting in upgrades. Small investments now lead to big returns later!"
+                    </div>
+                    <button id="new-tip-btn" class="mt-3 text-xs bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded transition">
+                      tips
+                    </button>
+                </div>
+
+                <!-- Tasks -->
+                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-tasks text-green-400 mr-2"></i>
+                        <h3 class="font-semibold">daily reward</h3>
+                    </div>
+                    <div class="space-y-33">
+                        <div class="bg-gray-700 p-3 rounded-lg flex justify-between items-center">
+                            <div>
+                                <div class="font-medium">Click 500 times</div>
+                                <div class="text-xs text-gray-400">Reward: 100 coins</div>
+                            </div>
+                           <div class="w-24 bg-gray-600 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-l-full progress-bar" style="width: 100%" id="task1-progress"></div>
+                            </div>
+                            <button class="text-xs bg-green-600 hover:bg-green-500 px-3 py-1 rounded transition task-btn" data-task="1" disabled>
+                                Claim
+                            </button>
+                        </div>
+                        <div class="bg-gray-700 p-3 rounded-lg flex justify-between items-center">
+                            <div>
+                                <div class="font-medium">Earn 500 coins</div>
+                                <div class="text-xs text-gray-400">Reward: 250 coins</div>
+                            </div>
+                           <div class="w-24 bg-gray-600 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full progress-bar" style="width: 100%" id="task2-progress"></div>
+                            </div>
+                            <button class="text-xs bg-green-600 hover:bg-green-500 px-3 py-1 rounded transition task-btn" data-task="2" disabled>
+                                Claim
+                            </button>
+                        </div>
+                        <div class="bg-gray-700 p-3 rounded-lg flex justify-between items-center">
+                            <div>
+                                <div class="font-medium">Buy 3 upgrades</div>
+                                <div class="text-xs text-gray-400">Reward: 500 coins</div>
+                            </div>
+                            <div class="w-24 bg-gray-600 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full progress-bar" style="width: 100%" id="task3-progress"></div>
+                            </div>
+                            <button class="text-xs bg-green-600 hover:bg-green-500 px-3 py-1 rounded transition task-btn" data-task="3" disabled>
+                                Claim
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upgrades -->
+                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-arrow-up text-purple-400 mr-2"></i>
+                        <h3 class="font-semibold">Upgrades</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-gray-700 p-3 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium">Click Power</div>
+                                <div class="text-xs bg-purple-600 px-2 py-1 rounded">Level <span id="click-power-level">1</span></div>
+                            </div>
+                            <div class="text-xs text-gray-400 mb-2">Increase coins per click</div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm" id="click-power-cost">Cost: 100 coins</div>
+                                <button class="text-xs bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded transition upgrade-btn" data-upgrade="click-power">
+                                    Upgrade
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-700 p-3 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium">Auto Miner</div>
+                                <div class="text-xs bg-purple-600 px-2 py-1 rounded">Owned: <span id="auto-miner-count">0</span></div>
+                            </div>
+                            <div class="text-xs text-gray-400 mb-2">Automatically mines coins for you</div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm" id="auto-miner-cost">Cost: 50 coins</div>
+                                <button class="text-xs bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded transition upgrade-btn" data-upgrade="auto-miner">
+                                    Buy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-700 p-3 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium">Multiplier</div>
+                                <div class="text-xs bg-purple-600 px-2 py-1 rounded">Level <span id="multiplier-level">1</span></div>
+                            </div>
+                            <div class="text-xs text-gray-400 mb-2">Multiply all your earnings</div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm" id="multiplier-cost">Cost: 500 coins</div>
+                                <button class="text-xs bg-purple-600 hover:bg-purple-500 px-3 py-1 rounded transition upgrade-btn" data-upgrade="multiplier">
+                                    Upgrade
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Settings</h3>
+                <button id="close-settings" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Theme</label>
+                    <select class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2">
+                        <option>Dark</option>
+                        <option>Light</option>
+                        <option>Blue</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Click Effect</label>
+                    <select id="click-effect" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2">
+                        <option value="pulse">Pulse</option>
+                        <option value="coins">Floating Coins</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+              
+               
+              
+              
+                <div class="flex items-center">
+                    <input type="checkbox" id="notifications" class="mr-2" checked>
+                    <label for="notifications" class="text-sm">Enable Notifications</label>
+                </div>
+                <div class="pt-4 border-t border-gray-700">
+                    <button id="reset-game" class="w-full bg-red-600 hover:bg-red-500 py-2 rounded-lg transition">
+                        Reset Game
+                    </button>
+                   
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <script>
+        // Game State
+        const gameState = {
+            coins: 0,
+            totalClicks: 0,
+            autoMiners: 0,
+            clickPower: 1,
+            multiplier: 1,
+            totalEarned: 0,
+            tasks: {
+                click50: { completed: false, progress: 0, reward: 100 },
+                earn500: { completed: false, progress: 0, reward: 250 },
+                buy3Upgrades: { completed: false, progress: 0, reward: 500, upgradesBought: 0 }
+            },
+            upgrades: {
+                clickPower: { level: 1, cost: 100, costIncrease: 1.5 },
+                autoMiner: { cost: 50, costIncrease: 1.3 },
+                multiplier: { level: 1, cost: 500, costIncrease: 2 }
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            coinCounter: document.getElementById('coin-counter'),
+            cpsCounter: document.getElementById('cps-counter'),
+            totalClicks: document.getElementById('total-clicks'),
+            autoMiners: document.getElementById('auto-miners'),
+            multiplier: document.getElementById('multiplier'),
+            totalEarned: document.getElementById('total-earned'),
+            clickValue: document.getElementById('click-value'),
+            clickArea: document.getElementById('click-area'),
+            aiTip: document.getElementById('ai-tip'),
+            newTipBtn: document.getElementById('new-tip-btn'),
+            settingsBtn: document.getElementById('settings-btn'),
+            settingsModal: document.getElementById('settings-modal'),
+            closeSettings: document.getElementById('close-settings'),
+            resetGame: document.getElementById('reset-game'),
+            clickEffect: document.getElementById('click-effect')
+        };
+
+        // AI Tips
+        const tips = [
+            "test1",
+            "test2",
+            "test3",
+            "test4",
+            "test5",
+            "test6",
+            "test7",
+            "test8",
+            "test9",
+            "test10"
+        ];
+
+        // Initialize game
+        function initGame() {
+            updateUI();
+            startAutoMining();
+            loadGame();
+        }
+
+        // Update all UI elements
+        function updateUI() {
+            elements.coinCounter.textContent = formatNumber(gameState.coins);
+            elements.cpsCounter.textContent = formatNumber(calculateCPS());
+            elements.totalClicks.textContent = gameState.totalClicks;
+            elements.autoMiners.textContent = gameState.autoMiners;
+            elements.multiplier.textContent = `${gameState.multiplier}x`;
+            elements.totalEarned.textContent = formatNumber(gameState.totalEarned);
+            elements.clickValue.textContent = `+${formatNumber(gameState.clickPower * gameState.multiplier)} per click`;
+            
+            // Update upgrade costs
+            document.getElementById('click-power-level').textContent = gameState.upgrades.clickPower.level;
+            document.getElementById('click-power-cost').textContent = `Cost: ${formatNumber(Math.floor(gameState.upgrades.clickPower.cost))} coins`;
+            document.getElementById('auto-miner-count').textContent = gameState.autoMiners;
+            document.getElementById('auto-miner-cost').textContent = `Cost: ${formatNumber(Math.floor(gameState.upgrades.autoMiner.cost))} coins`;
+            document.getElementById('multiplier-level').textContent = gameState.upgrades.multiplier.level;
+            document.getElementById('multiplier-cost').textContent = `Cost: ${formatNumber(Math.floor(gameState.upgrades.multiplier.cost))} coins`;
+            
+            // Update task progress
+            updateTaskProgress();
+        }
+
+        // Calculate coins per second
+        function calculateCPS() {
+            return gameState.autoMiners * 0.5 * gameState.multiplier;
+        }
+
+        // Format large numbers
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return Math.floor(num);
+        }
+
+        // Handle click event
+        function handleClick() {
+            // Add click animation
+            elements.clickArea.classList.add('click-animation');
+            setTimeout(() => {
+                elements.clickArea.classList.remove('click-animation');
+            }, 200);
+            
+            // Add floating coin effect if selected
+            if (elements.clickEffect.value === 'coins') {
+                createFloatingCoin();
+            }
+            
+            // Calculate earnings
+            const earnings = gameState.clickPower * gameState.multiplier;
+            addCoins(earnings);
+            gameState.totalClicks++;
+            gameState.totalEarned += earnings;
+            
+            // Update task progress
+            gameState.tasks.click50.progress++;
+            if (gameState.tasks.click50.progress >= 50 && !gameState.tasks.click50.completed) {
+                gameState.tasks.click50.completed = true;
+                document.querySelector('.task-btn[data-task="1"]').disabled = false;
+            }
+            
+            updateUI();
+            saveGame();
+        }
+
+        // Create floating coin animation
+        function createFloatingCoin() {
+            const coin = document.createElement('div');
+            coin.className = 'coin-float text-yellow-400';
+            coin.innerHTML = '<i class="fas fa-coins"></i>';
+            
+            // Random position within click area
+            const clickAreaRect = elements.clickArea.getBoundingClientRect();
+            const x = Math.random() * (clickAreaRect.width - 20);
+            const y = Math.random() * (clickAreaRect.height - 20);
+            
+            coin.style.left = `${x}px`;
+            coin.style.top = `${y}px`;
+            
+            elements.clickArea.appendChild(coin);
+            
+            // Remove after animation
+            setTimeout(() => {
+                coin.remove();
+            }, 1000);
+        }
+
+        // Add coins with optional multiplier
+        function addCoins(amount) {
+            gameState.coins += amount;
+   updateUI();
+        }
+
+        // Start auto mining loop
+        function startAutoMining() {
+            setInterval(() => {
+                if (gameState.autoMiners > 0) {
+                    const earnings = calculateCPS() / 10; // Update 10 times per second for smoother progress
+                    addCoins(earnings);
+                    gameState.totalEarned += earnings;
+                    
+                    // Update earn500 task progress
+                    gameState.tasks.earn500.progress = Math.min(gameState.totalEarned, 500);
+                    if (gameState.totalEarned >= 500 && !gameState.tasks.earn500.completed) {
+                        gameState.tasks.earn500.completed = true;
+                        document.querySelector('.task-btn[data-task="2"]').disabled = false;
+                    }
+                    
+                    updateUI();
+                    saveGame();
+                }
+            }, 100);
+        }
+
+        // Update task progress bars
+        function updateTaskProgress() {
+            document.getElementById('task1-progress').style.width = `${(gameState.tasks.click50.progress / 50) * 100}%`;
+                                
+          document.getElementById('task2-progress').style.width = `${(gameState.tasks.earn500.progress / 500) * 100}%`;
+            document.getElementById('task3-progress').style.width = `${(gameState.tasks.buy3Upgrades.upgradesBought / 3) * 100}%`;
+        }
+
+        // Claim task reward
+        function claimTask(taskId) {
+            let reward = 0;
+            
+            switch(taskId) {
+                case '1':
+                    if (gameState.tasks.click50.completed) {
+                        reward = gameState.tasks.click50.reward;
+                        gameState.tasks.click50.completed = false;
+                        gameState.tasks.click50.progress = 0;
+                        document.querySelector('.task-btn[data-task="1"]').disabled = true;
+                                              }              
+                break;
+                case '2':
+                    if (gameState.tasks.earn500.completed) {
+                        reward = gameState.tasks.earn500.reward;
+                        gameState.tasks.earn500.completed = false;
+                        gameState.tasks.earn500.progress = 0;
+                        document.querySelector('.task-btn[data-task="2"]').disabled = true;
+                    }
+                    break;
+                case '3':
+                    if (gameState.tasks.buy3Upgrades.completed) {
+                        reward = gameState.tasks.buy3Upgrades.reward;
+                        gameState.tasks.buy3Upgrades.completed = false;
+                        gameState.tasks.buy3Upgrades.upgradesBought = 0;
+                        document.querySelector('.task-btn[data-task="3"]').disabled = true;
+                    }
+                    break;
+            }
+            
+            if (reward > 0) {
+                addCoins(reward * gameState.multiplier);
+                gameState.totalEarned += reward * gameState.multiplier;
+                saveGame();
+            }
+        }
+
+        // Buy upgrade
+        function buyUpgrade(upgradeType) {
+            let cost = 0;
+            let success = false;
+            
+            switch(upgradeType) {
+                case 'click-power':
+                    cost = Math.floor(gameState.upgrades.clickPower.cost);
+                    if (gameState.coins >= cost) {
+                        gameState.coins -= cost;
+                        gameState.clickPower += 1;
+                        gameState.upgrades.clickPower.level++;
+                        gameState.upgrades.clickPower.cost *= gameState.upgrades.clickPower.costIncrease;
+                        success = true;
+                    }
+                    break;
+                case 'auto-miner':
+                    cost = Math.floor(gameState.upgrades.autoMiner.cost);
+                    if (gameState.coins >= cost) {
+                        gameState.coins -= cost;
+                        gameState.autoMiners++;
+                        gameState.upgrades.autoMiner.cost *= gameState.upgrades.autoMiner.costIncrease;
+                        success = true;
+                    }
+                    break;
+                case 'multiplier':
+                    cost = Math.floor(gameState.upgrades.multiplier.cost);
+                    if (gameState.coins >= cost) {
+                        gameState.coins -= cost;
+                        gameState.multiplier += 0.5;
+                        gameState.upgrades.multiplier.level++;
+                        gameState.upgrades.multiplier.cost *= gameState.upgrades.multiplier.costIncrease;
+                        success = true;
+                    }
+                    break;
+            }
+            
+            if (success) {
+                // Update buy3Upgrades task progress
+                gameState.tasks.buy3Upgrades.upgradesBought++;
+                if (gameState.tasks.buy3Upgrades.upgradesBought >= 3 && !gameState.tasks.buy3Upgrades.completed) {
+                    gameState.tasks.buy3Upgrades.completed = true;
+                    document.querySelector('.task-btn[data-task="3"]').disabled = false;
+                }
+                
+                updateUI();
+                saveGame();
+                return true;
+            }
+            return false;
+        }
+
+        // Generate new AI tip
+        function generateNewTip() {
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            elements.aiTip.textContent = `"${randomTip}"`;
+        }
+
+        // Save game to localStorage
+        function saveGame() {
+            localStorage.setItem('coinMinerProSave', JSON.stringify(gameState));
+        }
+
+        // Load game from localStorage
+        function loadGame() {
+            const savedGame = localStorage.getItem('coinMinerProSave');
+            if (savedGame) {
+                const parsed = JSON.parse(savedGame);
+                Object.assign(gameState, parsed);
+                updateUI();
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            if (confirm('سيتم مسح بيانات اللعبة بالكامل.هل أنت متأكد؟')) {
+                localStorage.removeItem('coinMinerProSave');
+                Object.assign(gameState, {
+                    coins: 0,
+                    totalClicks: 0,
+                    autoMiners: 0,
+                    clickPower: 1,
+                    multiplier: 1,
+                    totalEarned: 0,
+                    tasks: {
+                        click50: { completed: false, progress: 0, reward: 100 },
+                        earn500: { completed: false, progress: 0, reward: 250 },
+                        buy3Upgrades: { completed: false, progress: 0, reward: 500, upgradesBought: 0 }
+                    },
+                    upgrades: {
+                        clickPower: { level: 1, cost: 100, costIncrease: 1.5 },
+                        autoMiner: { cost: 50, costIncrease: 1.3 },
+                        multiplier: { level: 1, cost: 500, costIncrease: 2 }
+                    }
+                });
+                updateUI();
+                elements.settingsModal.classList.add('hidden');
+            }
+        }
+
+        // Event Listeners
+        elements.clickArea.addEventListener('click', handleClick);
+        elements.newTipBtn.addEventListener('click', generateNewTip);
+        
+        elements.settingsBtn.addEventListener('click', () => {
+            elements.settingsModal.classList.remove('hidden');
+        });
+        
+        elements.closeSettings.addEventListener('click', () => {
+            elements.settingsModal.classList.add('hidden');
+        });
+        
+        elements.resetGame.addEventListener('click', resetGame);
+        
+        document.querySelectorAll('.task-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                claimTask(e.target.dataset.task);
+            });
+        });
+        
+        document.querySelectorAll('.upgrade-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                buyUpgrade(e.target.dataset.upgrade);
+            });
+        });
+
+        // Initialize the game
+        initGame();
+    </script>
+</body>
+</html>
